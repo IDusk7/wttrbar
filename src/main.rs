@@ -161,12 +161,19 @@ fn main() {
         current_condition["humidity"].as_str().unwrap()
     );
     let nearest_area = &weather["nearest_area"][0];
+    let area_name = nearest_area["areaName"][0]["value"].as_str().unwrap();
+    let region = nearest_area["region"][0]["value"].as_str().unwrap();
+    let country = nearest_area["country"][0]["value"].as_str().unwrap();
+
+    let location_parts: Vec<&str> = vec![area_name, region, country]
+        .into_iter()
+        .filter(|part| !part.is_empty())
+        .collect();
+
     tooltip += &format!(
-        "{}: {}, {}, {}\n",
+        "{}: {}\n",
         lang.location(),
-        nearest_area["areaName"][0]["value"].as_str().unwrap(),
-        nearest_area["region"][0]["value"].as_str().unwrap(),
-        nearest_area["country"][0]["value"].as_str().unwrap()
+        location_parts.join(", ")
     );
 
     if args.observation_time {
